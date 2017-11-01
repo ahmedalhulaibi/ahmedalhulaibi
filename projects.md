@@ -22,7 +22,7 @@ A simple but hard tapping game designed for those moments when you're on the toi
  
 This game was my first published Android game.
 
-Google Play Store [Link](https://play.google.com/store/apps/details?id=com.BlueFrostProductions.O_x&hl=en)
+[Google Play Store Link](https://play.google.com/store/apps/details?id=com.BlueFrostProductions.O_x&hl=en)
 
 Technologies Used: C#, Unity, Google Mobile Ads, Google Play Games Services
 
