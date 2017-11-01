@@ -3,7 +3,7 @@ title: "Projects"
 date: 2017-11-01 16:30:01 -0500
 permalink: projects.html
 ---
-[<- Back to Homepage]({{site.url}})
+[<- Back to Homepage]({{site.url}}/ahmedalhulaibi)
 
 # Projects
 
