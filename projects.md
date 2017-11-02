@@ -3,7 +3,7 @@ title: "Projects"
 date: 2017-11-01 16:30:01 -0500
 permalink: projects.html
 ---
-[<- Back to Homepage]({{site.url}}{% link index.md %})
+[<- Back to Homepage]({{site.baseurl}}{% link index.md %})
 
 # Projects
 
