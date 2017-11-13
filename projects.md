@@ -6,6 +6,11 @@ permalink: projects.html
 [<- Back to Homepage]({{site.baseurl}}{% link index.md %})
 
 # Projects
+---
+## Graphqlator
+An open-source command line app built using go-cobra that generates a GraphQL type schema from a MySQL database table schema.
+
+<a href="https://github.com/ahmedalhulaibi/go-graphqlator-cli" target="_blank">GitHub Source</a>
 
 ---
 ## Battleship Java - 2017
