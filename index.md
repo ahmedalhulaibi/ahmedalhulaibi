@@ -12,6 +12,8 @@ My secondary project is enabling DevOps on the IBM Z/OS mainframe. My role consi
 ## Languages
 Day-to-day I use many languages to get the job done depending on the platform or problem.
 ##### Actively using:
+- Javascript (Node.js)
+- Go
 - C#
 - Java
 - SQL
@@ -22,8 +24,6 @@ Day-to-day I use many languages to get the job done depending on the platform or
 - Perl
 
 ##### Experience Using
-- Javascript (Node.js)
-- Go
 - C++
 
 ## Data Stores
