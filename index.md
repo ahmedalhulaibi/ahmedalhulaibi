@@ -32,8 +32,5 @@ I'm currently working at the Bank of Nova Scotia as a developer. My current focu
 - MariaDB
 
 ## Education
-### University of Leicester
-MSc in Advanced Computer Science - Graduation September 2019
-
 ### University of Ontario Institute of Technology
 Bachelor of IT in Game Development and Entrepreneurship, Minor in Game Production - April 2015
