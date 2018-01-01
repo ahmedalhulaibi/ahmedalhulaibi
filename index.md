@@ -3,18 +3,14 @@ My name is Ahmed Al-Hulaibi.
 
 I am a software developer based out of Toronto, Canada.
 
-I'm currently working at the Bank of Nova Scotia as a developer supporting legacy COBOL systems, in addition to Java systems. 
+I'm currently working at the Bank of Nova Scotia as a developer supporting legacy COBOL and Java systems. 
 
-My current project is enabling DevOps on the IBM Z/OS mainframe, defining and building a mainframe CI/CD pipeline in addition to identifying and testing tools for mainframe DevOps. I'm also developing Bash and Perl scripts to automate and ease the on-boarding process for our application development and support groups. The majority of our developers are not familiar with Unix or CLI so I am quite excited to see our teams take the plunge.
+My current project is enabling DevOps on the IBM Z/OS mainframe, defining and building a mainframe CI/CD pipeline. I'm also developing Bash and Perl scripts to automate and ease the on-boarding process for our development teams. The majority of our developers are not familiar with Unix or CLI so I am quite excited to see our teams take the plunge!
 
 ## [Projects (click here)]({{site.baseurl}}{% link projects.md %})
 
 ## Languages
-Day-to-day I use many languages to get the job done depending on the platform or problem.
-##### Actively using:
-- Javascript (Node.js)
-- Go
-- C#
+Day-to-day I use many languages both at work and at home.
 - Java
 - SQL
 - SAS
@@ -22,8 +18,9 @@ Day-to-day I use many languages to get the job done depending on the platform or
 - Groovy
 - Bash
 - Perl
-
-##### Experience Using
+- Javascript
+- Go
+- C#
 - C++
 
 ## Data Stores
