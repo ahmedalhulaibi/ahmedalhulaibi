@@ -14,6 +14,7 @@ Day-to-day I use many languages both at work and at home.
 
 - Go
 - Javascript
+- Java
 - SQL
 - Bash
 - Perl
