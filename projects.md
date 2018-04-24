@@ -8,7 +8,7 @@ permalink: projects.html
 # Projects
 ---
 ## Graphqlator
-An open-source command line app built using go-cobra that generates a GraphQL type schema from a MySQL database table schema.
+An open-source command line app built using go-cobra that generates a GraphQL API using an existing MySQL or Postgres database.
 
 <a href="https://github.com/ahmedalhulaibi/go-graphqlator-cli" target="_blank">GitHub Source</a>
 
