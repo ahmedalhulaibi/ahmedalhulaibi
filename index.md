@@ -26,7 +26,7 @@ Day-to-day I use many languages both at work and at home.
 
 ## Education
 ### Udacity
-Currently enrolled in Front-End Web Developer Nanodegree
+Currently enrolled in Full Stack Web Developer Nanodegree
 
 ### University of Ontario Institute of Technology
 Bachelor of IT in Game Development and Entrepreneurship, Minor in Game Production - April 2015
