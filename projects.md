@@ -54,7 +54,7 @@ My main tasks included:
 - Level Design
 
 
-Technologies Used: C# and Unity
+Technologies Used: C#, Unity, Tobii EyeX SDK
 
 <a href="https://github.com/ahmedalhulaibi/Nonoculus" target="_blank">GitHub Source</a>
 
