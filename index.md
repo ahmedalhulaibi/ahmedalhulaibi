@@ -1,28 +1,24 @@
 # Who am I?
-My name is Ahmed Al-Hulaibi. 
 
-I am a software developer based out of Toronto, Canada.
+I am a software engineer based out of Toronto, Canada. 
 
-I'm currently working at the Bank of Nova Scotia as a developer supporting legacy COBOL and Java systems. 
+I'm currently working on modernizing a legacy Payments Engine at the Bank of Nova Scotia. 
 
 ## [Projects (click here)]({{site.baseurl}}{% link projects.md %})
 
-## Languages
-Day-to-day I use many languages both at work and at home.
+## Skills
 
 - Go
-- Javascript
+- Python
+- Javascript, HTML, CSS
 - Java
 - SQL
 - Bash
 - Perl
 - SAS
 - COBOL
+- MQ
 
-## Data Stores
-- MongoDB
-- MySQL
-- MariaDB
 
 ## Education
 ### Udacity
