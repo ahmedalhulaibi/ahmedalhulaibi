@@ -14,7 +14,10 @@ A Go package to marhsal flat file records into a struct. Allows developer to def
 
 ---
 ## Home Inventory
-A web app to track inventory at home. Login implemented through Google OAuth. Web pages are server-side rendered. A standalone JSON API is also provided. Built in Python (Flask), HTML, CSS
+A web app to track inventory at home. Built in Python (Flask), HTML, CSS
+- Traditional server-side rendered front-end
+- JSON API
+- Front-end/JSON API authentication through Google OAuth 
 
 <a href="https://github.com/ahmedalhulaibi/home_inventory" target="_blank">GitHub Source</a>
 
