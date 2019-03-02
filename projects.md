@@ -45,7 +45,7 @@ A memory matching game built in Javascript,HTML5, CSS,
 ## Battleship Java - 2017
 A console game to play the Battleship board game against a computer player. Developed during a Java course.
 
-<a href="https://github.com/ahmedalhulaibi/IntroToJava/tree/master/FinalProject/src/battleship" target="_blank">GitHub Source</a>
+<a href="https://github.com/ahmedalhulaibi/IntroToJava/tree/master/FinalProject-Battleship/src/battleship" target="_blank">GitHub Source</a>
 
 ---
 ## Tap That 0_x - 2015
