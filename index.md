@@ -11,18 +11,13 @@ I'm currently working on modernizing a legacy Payments Engine at the Bank of Nov
 - Go
 - Python
 - Javascript, HTML, CSS
-- Java
 - SQL
 - Bash
-- Perl
-- SAS
-- COBOL
-- MQ
 
 
 ## Education
 ### Udacity
-Currently enrolled in Full Stack Web Developer Nanodegree
+[Full Stack Web Developer Nanodegree Graduate](https://confirm.udacity.com/ML932AC3)
 
 ### University of Ontario Institute of Technology
 Bachelor of IT in Game Development and Entrepreneurship, Minor in Game Production - April 2015
