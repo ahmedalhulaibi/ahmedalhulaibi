@@ -8,13 +8,13 @@ permalink: projects.html
 # Projects
 ---
 ## ffparser - Flat File Parser
-A Go package to marhsal flat file records into a struct.
+A Go package to marhsal flat file records into a struct. Allows developer to define file layouts using struct tags. 
 
 <a href="https://github.com/ahmedalhulaibi/ffparser" target="_blank">GitHub Source</a>
 
 ---
-## Home Inventory Project
-A webapp to track inventory at home. Built in Python (Flask), HTML, CSS
+## Home Inventory
+A web app to track inventory at home. Login implemented through Google OAuth. Web pages are server-side rendered. A standalone JSON API is also provided. Built in Python (Flask), HTML, CSS
 
 <a href="https://github.com/ahmedalhulaibi/home_inventory" target="_blank">GitHub Source</a>
 
