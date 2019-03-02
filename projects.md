@@ -7,7 +7,7 @@ permalink: projects.html
 
 # Projects
 ---
-## ffparser
+## ffparser - Flat File Parser
 A Go package to marhsal flat file records into a struct.
 
 <a href="https://github.com/ahmedalhulaibi/ffparser" target="_blank">GitHub Source</a>
