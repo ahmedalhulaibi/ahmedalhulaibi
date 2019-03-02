@@ -7,10 +7,36 @@ permalink: projects.html
 
 # Projects
 ---
+## ffparser
+A Go package to marhsal flat file records into a struct.
+
+<a href="https://github.com/ahmedalhulaibi/ffparser" target="_blank">GitHub Source</a>
+
+---
+## Home Inventory Project
+A webapp to track inventory at home. Built in Python (Flask), HTML, CSS
+
+<a href="https://github.com/ahmedalhulaibi/home_inventory" target="_blank">GitHub Source</a>
+
+---
+## Logs Analysis
+A Python CLI reporting tool for a mock 'news' database. 
+
+<a href="https://github.com/ahmedalhulaibi/logsanalysis" target="_blank">GitHub Source</a>
+
+---
 ## Graphqlator
-An open-source command line app built using go-cobra that generates a GraphQL API using an existing MySQL or Postgres database.
+An open-source command line app built using Go that generates a GraphQL API using an existing MySQL or Postgres database.
 
 <a href="https://github.com/ahmedalhulaibi/go-graphqlator-cli" target="_blank">GitHub Source</a>
+
+---
+## Memory Matching Game
+A memory matching game built in Javascript,HTML5, CSS, 
+
+<a href="https://ahmedalhulaibi.github.io/fend-project-memory-game/" target="_blank">Link to Game</a>
+
+<a href="https://github.com/ahmedalhulaibi/fend-project-memory-game" target="_blank">GitHub Source</a>
 
 ---
 ## Battleship Java - 2017
