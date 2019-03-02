@@ -35,7 +35,7 @@ An open-source command line app built using Go that generates a GraphQL API usin
 
 ---
 ## Memory Matching Game
-A memory matching game built in Javascript,HTML5, CSS, 
+A memory matching game built in Javascript, HTML5, CSS. 
 
 <a href="https://ahmedalhulaibi.github.io/fend-project-memory-game/" target="_blank">Link to Game</a>
 
