@@ -7,10 +7,10 @@ permalink: projects.html
 
 # Projects
 ---
-## ffparser - Flat File Parser
+## flatfile - Flat File Parser
 A Go package to unmarhsal flat file records into a struct. Allows developer to define file layouts using struct tags. 
 
-<a href="https://github.com/ahmedalhulaibi/ffparser" target="_blank">GitHub Source</a>
+<a href="https://github.com/ahmedalhulaibi/flatfile" target="_blank">GitHub Source</a>
 
 ---
 ## Home Inventory
