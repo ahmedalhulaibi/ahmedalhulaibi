@@ -7,6 +7,12 @@ permalink: projects.html
 
 # Projects
 ---
+## json2go - Generate Go Struct Code from JSON
+A go package and CLI app which generates code for a Go struct from input JSON. This speeds up development time for writing source to map large JSON objects to Go structs.
+
+<a href="https://github.com/ahmedalhulaibi/json2go" target="_blank">GitHub Source</a>
+
+---
 ## flatfile - Flat File Parser
 A Go package to unmarhsal flat file records into a struct. Allows developer to define file layouts using struct tags. 
 
