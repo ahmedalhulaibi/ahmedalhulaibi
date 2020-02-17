@@ -1,7 +1,7 @@
 ---
 title: "About Me"
 date: 2020-02-16T23:26:27-05:00
-draft: true
+draft: false
 ---
 
 I am a back-end software engineer based out of Toronto, Canada. 
