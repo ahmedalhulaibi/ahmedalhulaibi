@@ -41,6 +41,11 @@ pygmentscodefencesguesssyntax = true
     icon = "fab fa-twitter fa-2x"
     weight = 3
     url = "https://twitter.com/ahmedhulaibi/"
+[[params.social]]
+    name = "LinkedIn"
+    icon = "fab fa-linkedin"
+    weight = 4
+    url = "https://www.linkedin.com/in/ahmed-al-hulaibi/"
 
 # Menu links
 [[menu.main]]
