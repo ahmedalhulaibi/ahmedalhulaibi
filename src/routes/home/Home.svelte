@@ -60,15 +60,15 @@
 </style>
 
 <svelte:head>
-  <title>Don't Get It Twisted: Ahmed Al-Hulaibi</title>
+  <title>Hulaibi's Blog</title>
   <meta name="description" content="Ahmed Al-Hulaibi's Personal Blog!" />
   <link href="{settings.origin}/" rel="canonical" />
 </svelte:head>
 
 <div class="banner">
-  <h1>Welcome to my personal blog, "Don't Get It Twisted."</h1>
+  <h1>Hulaibi's Blog</h1>
 
-  <p>I'm Ahmed Al-Hulaibi, a web developer working primarily in Go.</p>
+  <p>Welcome to my personal blog, I'm Ahmed Al-Hulaibi, a web developer working primarily in Go.</p>
 
   <p>
     I am just a regular guy, but when you put a keyboard in my hands I become a regular guy with a keyboard.
