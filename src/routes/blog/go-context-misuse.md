@@ -1,6 +1,6 @@
 ---
 title: 'Golang context.Context: Identifying misuse'
-excerpt: "Golang's context.Context interface is useful, but can be easily misused"
+excerpt: "Golang's context.Context is useful, but can be easily misused"
 date: '2021-08-17T05:35:07.322Z'
 author: Ahmed Al-Hulaibi
 ---
@@ -9,22 +9,13 @@ Generally, `context.Context` is used to propagate cancellation signals, deadline
 
 The request-scoped values use case in particular is where I have experienced pain. The definition of request-scoped gets stretched to **anything needed to process this request.**
 
-I have learned the hard way (not by choice) to **avoid using `context.Context` for dependency injection and other explicit inputs.** 
+I have learned the hard way (not by choice) to **avoid using `context.Context` for dependency injection and shared-state.** 
 
-The main problem I want to highlight when `context.Context` is that it **obfuscates inputs** when reading method signatures leading to delays, nil pointers, and confusion
+The main problem I want to highlight when `context.Context` is that it **obfuscates inputs** when reading method signatures leading to development delays, nil pointers, and confusion.
 
 ## Obfuscating Inputs
 
-I have seen the following propagated through `context.Context` and custom context objects
-- `*sql.DB`
-- `*sql.Tx`
-- Logger implementations
-- User objects
-- Localization Locale
-
-`context.Context` is used this way as a catch-all dependency injection mechanism. The intent is usually to hide complexity but it leads to misleading function and method signatures and frequently leads to nil pointer exceptions.
-
-Below is a simple example:
+Below is an example of how I have seen `context.Context` used. The intent is to design `service.GetUserByID` so that it is easier to consume. By propagating a frequently used object `logger` through shared-state `context.Context` we don't have to force all of our method signatures to define `logger` as a parameter.
 
 ```go
 // package user
@@ -44,15 +35,46 @@ func main() {
 }
 ```
 
-The intent here is to make `service.GetUserByID` easier to consume. This is an indirection as opposed to a solution.
+While the intent is noble, this does not make this method easier to consume. The complier and godoc will tell us this method only requires 2 input parameters. This is a lie. It only _appears_ as though it required 2 inputs. This method clearly requires 3 inputs, or it will not run as expected.
 
-This implementation has **obfuscated the inputs to the method**. How is a reader supposed to know that there was a specific value `logger` expected in context? The above implementation bypasses compile-time checks. We would have to read the implementation or wait to run into an nil pointer exception to uncover the truth.
+We have only shifted the complexity to an obscure object.
+
+If you use `context.Context` as a catch-all dependency injection tool, you will not be able to communicate function or method inputs clearly. Aside from affecting readability, in my experience this frequently leads to nil pointer exceptions.
+
+### Nil Pointer Exceptions
+
+Looking at our original example (listed below), it's been established that this implementation has **obfuscated the inputs to the method**.
+
+```go
+// package user
+func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
+  logger := context.Value("logger").(Logger)
+
+  //... do stuff with nil logger, leading to panic
+  logger.Info("I will never execute if I am nil")
+} 
+```
+
+How is a reader supposed to know that there was a specific value `logger` expected in context? The above implementation would compile if we failed to setup `context.Context`. We would have to read the implementation or wait to run into an nil pointer exception to uncover the truth.
 
 If this slips into a live environment, it will cause disruptions for you, your colleagues and your customers.
 
+## How can we fix this?
+
+I have observed and tried many workarounds to avoid a full refactor but only two actual solutions exist
+
+1. Dependency Injection for service dependencies like `logger` and `sql.DB`
+2. Explicitly define input parameters. Use the `Builder` pattern if there is a complex or large set of related inputs required.
+
+Let's walkthrough the same example with our `logger` and go through the alternatives. 
+
+### Tests won't work
+
 We could catch these exceptions through tests but if someone has decided to mock this method they likely will not mock the context values correctly and will be surpised later on.
 
-We could avoid the exception with some defensive programming:
+### Defensive Programming won't work in practice
+
+We could avoid the exception using defensive programming with a type assertion
 
 ```go
 func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
@@ -65,9 +87,10 @@ func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
 }
 ```
 
-This avoids the nil pointer exception but still fails to communicate that there is an input expected. This changes little in terms of improving readability or documentation. The method signature is still misleading. The error will just bubble up and likely result in the same error for our users and still require making a change.
+This avoids the nil pointer exception but still fails to communicate that there is an input expected. The method signature is still misleading. In practice, the error will bubble up and likely result in the same error for our users and still cause service disruptions.
 
-At the very least, if something like this is expected and is not actually request scoped, fallback to some default.
+### Fallback to default value
+At the very least, if `logger` is expected but not found, we could fallback to some default.
 
 ```go
 func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
@@ -85,8 +108,11 @@ logger, ok := context.Value("logger").(Logger)
   }
 }
 ```
+### Dependency Injection is best
 
-But what would be better is if the `logger` was injected directly into the `service`
+What would be better is if the `logger` was injected directly into the `service` through a constructor. The `logger` is a service dependency. It is likely that it will be used across all methods of our service.
+
+In the example below, the `New` function signature clearly communicates the expected service dependencies. At this point we can decide how to handle a `nil` logger. This also solves the issue around making our service method easier to use, since we no longer have to provide `logger` as an input.
 
 ```go
 type service struct {
@@ -102,11 +128,8 @@ func New(logger Logger) (service) {
 
 func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
   s.logger.Info("I will never execute if I am nil")
-
 }
 ```
-
-The `New` function signature clearly communicates the expected service dependencies. 
 
 ## How to use `context.Context` correctly
 
@@ -115,7 +138,12 @@ My advice at time of writing would be to limit usage to:
 - Deadlines
 - Request-scoped metadata that does not alter behaviour
 
+For service wide dependencies `sql.DB` or `logger`, use dependency injection. Avoid hiding behind shared-state like `context.Context` to minimize run-time exceptions.
+
 **Any values required as inputs to functions and methods should be defined explicitly.**
+
+___
+## References
 
 Below are resources I have leveraged for my work in reference to how `context.Context` should be used.
 
