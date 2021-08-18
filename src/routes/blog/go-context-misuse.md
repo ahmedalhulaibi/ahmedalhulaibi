@@ -106,7 +106,7 @@ func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
 }
 ```
 
-The `New` function signature clearly communicates the expected service dependencies. Rather than relying on shared-state we rely on a stateless dependency. 
+The `New` function signature clearly communicates the expected service dependencies. 
 
 ## How to use `context.Context` correctly
 
