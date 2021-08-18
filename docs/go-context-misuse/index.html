@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Golang context.Context: Identifying misuse</title><meta name="description" content="Golang&#39;s context.Context interface is useful, but can be easily misused" data-svelte="svelte-1dene28"><link href="https://ahmedalhulaibi.com/go-context-misuse/" rel="canonical" data-svelte="svelte-1dene28"><link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css" class="svelte-1tkpvyy" data-svelte="svelte-hprhv2"><link rel="stylesheet" href="/_elderjs/assets/svelte-7f308397.css" media="all" /><style></style></head><body class="blog">
+
+<div class="container svelte-1tkpvyy"><!-- HTML_TAG_START -->
+<a href="/">← Home</a>
+
+<div class="title svelte-1sp2bm8"><h1 class="svelte-1sp2bm8">Golang context.Context: Identifying misuse</h1>
+  <small>By Ahmed Al-Hulaibi</small></div>
+
+<!-- HTML_TAG_START --><p>Generally, <code>context.Context</code> is used to propagate cancellation signals, deadlines, and request-scoped values.</p>
+<p>The request-scoped values use case in particular is where I have experienced pain. The definition of request-scoped gets stretched to <strong>anything needed to process this request.</strong></p>
+<p>I have learned the hard way (not by choice) to <strong>avoid using <code>context.Context</code> for dependency injection and other explicit inputs.</strong></p>
+<p>The main problem I want to highlight when <code>context.Context</code> is that it <strong>obfuscates inputs</strong> when reading method signatures leading to delays, nil pointers, and confusion</p>
+<h2 id="obfuscating-inputs">Obfuscating Inputs</h2>
+<p>I have seen the following propagated through <code>context.Context</code> and custom context objects</p>
+<ul>
+<li><code>*sql.DB</code></li>
+<li><code>*sql.Tx</code></li>
+<li>Logger implementations</li>
+<li>User objects</li>
+<li>Localization Locale</li>
+</ul>
+<p><code>context.Context</code> is used this way as a catch-all dependency injection mechanism. The intent is usually to hide complexity but it leads to misleading function and method signatures and frequently leads to nil pointer exceptions.</p>
+<p>Below is a simple example:</p>
+<pre><code class="language-go">// package user
+func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
+  logger := context.Value("logger").(Logger)
+
+  //... do stuff with nil logger, leading to panic
+  logger.Info("I will never execute if I am nil")
+} 
+
+// package main
+
+func main() {
+  userService := users.NewService()
+  u, err := user.GetUserByID(context.Background(), 1)
+  //...
+}
+</code></pre>
+<p>The intent here is to make <code>service.GetUserByID</code> easier to consume. This is an indirection as opposed to a solution.</p>
+<p>This implementation has <strong>obfuscated the inputs to the method</strong>. How is a reader supposed to know that there was a specific value <code>logger</code> expected in context? The above implementation bypasses compile-time checks. We would have to read the implementation or wait to run into an nil pointer exception to uncover the truth.</p>
+<p>If this slips into a live environment, it will cause disruptions for you, your colleagues and your customers.</p>
+<p>We could catch these exceptions through tests but if someone has decided to mock this method they likely will not mock the context values correctly and will be surpised later on.</p>
+<p>We could avoid the exception with some defensive programming:</p>
+<pre><code class="language-go">func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
+  logger, ok := context.Value("logger").(Logger)
+  if logger == nil || !ok {
+    return nil, fmt.Errorf("logger must be set in context")
+  }
+
+  logger.Info("I will never execute if I am nil")
+}
+</code></pre>
+<p>This avoids the nil pointer exception but still fails to communicate that there is an input expected. This changes little in terms of improving readability or documentation. The method signature is still misleading. The error will just bubble up and likely result in the same error for our users and still require making a change.</p>
+<p>At the very least, if something like this is expected and is not actually request scoped, fallback to some default.</p>
+<pre><code class="language-go">func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
+  logger := extractLogger(ctx)
+
+    //... do stuff with nil logger, leading to panic
+  logger.Info("I will never execute if I am nil")
+
+}
+
+func extractLogger(ctx context.Context) Logger {
+logger, ok := context.Value("logger").(Logger)
+  if logger == nil || !ok {
+    return log.New()
+  }
+}
+</code></pre>
+<p>But what would be better is if the <code>logger</code> was injected directly into the <code>service</code></p>
+<pre><code class="language-go">type service struct {
+  logger Logger
+}
+
+func New(logger Logger) (service) {
+  // ... validation to check if logger is nil, can fallback to a default logger
+  return service{
+    logger: logger,
+  }
+}
+
+func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
+  s.logger.Info("I will never execute if I am nil")
+
+}
+</code></pre>
+<p>The <code>New</code> function signature clearly communicates the expected service dependencies. Rather than relying on shared-state we rely on a stateless dependency.</p>
+<h2 id="how-to-use-contextcontext-correctly">How to use <code>context.Context</code> correctly</h2>
+<p>My advice at time of writing would be to limit usage to:</p>
+<ul>
+<li>Cancellation singals</li>
+<li>Deadlines</li>
+<li>Request-scoped metadata that does not alter behaviour</li>
+</ul>
+<p>Any values required as inputs to functions and methods should be defined explicitly.</p>
+<p>Below are resources I have leveraged for my work in reference to how <code>context.Context</code> should be used.</p>
+<blockquote>
+<ul>
+<li><a href="https://blog.golang.org/context">The Go Blog - Go Concurrency Patterns: Context</a></li>
+<li><a href="https://medium.com/@cep21/how-to-correctly-use-context-context-in-go-1-7-8f2c0fafdf39">How to use context.Context correctly in Go 1.7</a></li>
+<li><a href="https://dave.cheney.net/2017/01/26/context-is-for-cancelation">Dave Cheney - Context is for cancelation</a></li>
+<li><a href="https://dave.cheney.net/2017/08/20/context-isnt-for-cancellation">Dave Cheney - Context isn't for cancelation</a></li>
+<li><a href="https://blog.golang.org/context-and-structs">The Go Blog - Context and structs</a></li>
+</ul>
+</blockquote>
+<!-- HTML_TAG_END --><!-- HTML_TAG_END --></div>
+<div class="footer svelte-1tkpvyy">Built with ❤ and <a href="https://elderguide.com/tech/elderjs/" class="svelte-1tkpvyy">Elder.js</a></div>
+    
+    
+    
+    
+    </body></html>
