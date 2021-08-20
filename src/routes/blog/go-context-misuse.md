@@ -11,9 +11,13 @@ The definition of request-scoped is often stretched to **anything needed to proc
 
 I have learned the hard way (not by choice) to **avoid using `context.Context` for dependency injection and shared state that alters behaviour.** 
 
-In my experience the problem with using `context.Context` for dependency injection is that it **obfuscates inputs** when reading method and function signatures. Using `context.Context` as a dependency injection and/or shared state object is confusing for maintainers. In my experience, it has lead to development delays and service disruptions.
+Using `context.Context` as a dependency injection and/or shared state object is confusing for maintainers and consumers of a package. In my experience the problem with using `context.Context` for dependency injection is that it:
 
-## Obfuscating Inputs
+- **[Obfuscates inputs](##Obfuscated-inputs)** when reading method and function signatures.
+- **[Creates implicit coupling](##Implicit-and-unclear-temporal-coupling)** which slows down maintenance.
+- **[Leads to nil pointer exceptions](##Nil-pointer-exceptions)** causing development delays and service disruptions.
+
+## Obfuscated inputs
 
 Say we have a service method which requires a `Logger` as input.
 
@@ -78,7 +82,7 @@ Looking at our original example (listed again below), it's been established that
 func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
   logger := context.Value("logger").(log.Logger)
 
-  logger.Info("I will never execute if I am nil")
+  logger.Info("I will panic")
 } 
 
 // package main
@@ -99,7 +103,7 @@ If this slips into a live environment it will cause disruptions for you, your co
 The best 2 solutions I use are:
 
 1. Dependency Injection for service-wide dependencies like `logger` and `sql.DB`
-2. Explicitly define input parameters. Use the `Builder` pattern if there is a complex or large set of related inputs required.
+2. Explicitly define input parameters
 
 Let's walk through the same example with our `logger` and go through some alternatives. 
 
@@ -110,6 +114,8 @@ We could catch these exceptions through tests but if someone has decided to use 
 ### Defensive programming won't work in practice
 
 We could avoid the exception using defensive programming with a type assertion and return an error in case the logger is not set.
+
+This avoids the nil pointer exception but the method signature is still misleading readers to believe there are only 2 required inputs. In practice, the error will bubble up and likely result in the same error for our users and still cause service disruptions.
 
 ```go
 func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
@@ -122,18 +128,14 @@ func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
 }
 ```
 
-This avoids the nil pointer exception but the method signature is still misleading readers to believe there are only 2 required inputs. In practice, the error will bubble up and likely result in the same error for our users and still cause service disruptions.
-
 ### Fallback to a default value
-At the very least, if `logger` is expected but not found, we could fallback to some default value and abstract it into an accessor function.
+At the very least, if `logger` is expected but not found, we could fallback to some default value. Abstracted it into an accessor function.
 
 ```go
 func (s service) GetUserByID(ctx context.Context, id int64) (*User, error) {
   logger := extractLogger(ctx)
 
-    //... do stuff with nil logger, leading to panic
-  logger.Info("I will never execute if I am nil")
-
+  logger.Info("I will never fail now")
 }
 
 func extractLogger(ctx context.Context) log.Logger {
@@ -147,7 +149,7 @@ logger, ok := context.Value("logger").(log.Logger)
 
 What would be better is if the `logger` was injected directly into the `service` through a factory function. The `logger` is a service dependency. It is likely that it will be used across many or all methods of our service.
 
-In the example below, the `New` function signature clearly communicates the expected service dependencies. At this point we can decide how to handle a `nil` logger. This also solves the issue around making our service method easier to use, since we no longer have to provide `logger` as an input to every method. It also better communicates temporal coupling
+In the example below, the `New` factory function signature clearly communicates the expected service dependencies. At this point we can decide how to handle a `nil` logger. This also solves the issue around making our service method easier to use, since we no longer have to provide the `logger` as an input to every method. It also better communicates temporal coupling
 
 ```go
 type service struct {
