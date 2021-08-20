@@ -23,6 +23,7 @@
     background: #eee;
     padding: 1rem;
     border-radius: 1rem;
+    overflow-x: auto;
   }
 
   :global(blockquote) {
