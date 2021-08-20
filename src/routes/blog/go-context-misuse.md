@@ -13,9 +13,9 @@ I have learned the hard way (not by choice) to **avoid using `context.Context` f
 
 Using `context.Context` as a dependency injection and/or shared state object is confusing for maintainers and consumers of a package. In my experience the problem with using `context.Context` for dependency injection is that it:
 
-- **[Obfuscates inputs](##Obfuscated-inputs)** when reading method and function signatures.
-- **[Creates implicit coupling](##Implicit-and-unclear-temporal-coupling)** which slows down maintenance.
-- **[Leads to nil pointer exceptions](##Nil-pointer-exceptions)** causing development delays and service disruptions.
+- **[Obfuscates inputs](#obfuscated-inputs)** when reading method and function signatures.
+- **[Creates implicit coupling](#implicit-and-unclear-temporal-coupling)** which slows down maintenance.
+- **[Leads to nil pointer exceptions](#nil-pointer-exceptions)** causing development delays and service disruptions.
 
 ## Obfuscated inputs
 
