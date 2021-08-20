@@ -165,7 +165,8 @@ func New(logger log.Logger, opts ...func(*service)) (*service, error) {
   if logger == nil {
     logger = log.NewLogger()
   }
-  // We could use functional options here to set a default logger, and inject and overwrite the default with our own with an option
+  // We could use functional options here to set a default logger,
+  // and inject and overwrite the default with our own with an option
   logger = log.NoopLogger()
   for _, opt := range opts {
     opt(service)
