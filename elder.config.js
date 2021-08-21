@@ -25,6 +25,10 @@ module.exports = {
   plugins: {
     '@elderjs/plugin-markdown': {
       routes: ['blog'],
+      useSyntaxHighlighting: {
+      theme: 'nord' // available themes: https://github.com/shikijs/shiki/blob/main/docs/themes.md - try dark-plus or github-light
+      // theme is the only option available - for now.
+    },
     },
     '@elderjs/plugin-browser-reload': {
       // this reloads your browser when nodemon restarts your server.

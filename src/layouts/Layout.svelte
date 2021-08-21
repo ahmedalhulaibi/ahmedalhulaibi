@@ -14,12 +14,12 @@
   }
 
   :root {
-    --balloon-color: #06395a;
+    --balloon-color: #06465a;
     --balloon-font-size: 14px;
   }
   .footer {
     padding: 2rem 0;
-    background: #06395a;
+    background: #06465a;
     padding-top: 2rem;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
       'Helvetica Neue', sans-serif;

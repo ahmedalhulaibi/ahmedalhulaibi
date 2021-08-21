@@ -34,8 +34,22 @@
     border: 1px solid #ddd;
     border-radius: 1rem;
     margin-bottom: 1rem;
-    background: white;
+    background: #2e3440ff;
   }
+
+  :global(div.entry>a) {
+    color: #ceddff;
+  }
+
+  :global(div.entry>a:visited) {
+    color: rgb(213, 122, 255);
+  }
+
+  :global(div.entry>p) {
+    color: #fff;
+  }
+
+
   .about {
     margin-bottom: 2rem;
   }
