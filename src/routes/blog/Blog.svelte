@@ -27,7 +27,7 @@
 
   :global(blockquote) {
     margin: 0;
-    background: #ddd;
+    background: #2e3440ff;
     padding: 3px 1.5rem 3px 3rem;
     position: relative;
     border-radius: 1rem;
@@ -40,9 +40,25 @@
     top: 33%;
     left: 1rem;
   }
+  :global(blockquote h3) {
+    padding: 0;
+    color: #dad7d7;
+  }
 
   :global(blockquote p) {
     padding: 0;
+    color: #dad7d7;
+  }
+  :global(blockquote p code) {
+    padding: 0;
+    background-color: #eeeeee2e;
+  }
+  :global(blockquote p a) {
+    color: #ceddff;
+  }
+
+  :global(blockquote p a:visited) {
+    color: rgb(213, 122, 255);
   }
 </style>
 
