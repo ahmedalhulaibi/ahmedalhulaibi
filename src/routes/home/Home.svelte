@@ -1,8 +1,6 @@
 <script>
   import BlogTeaser from '../../components/BlogTeaser.svelte';
   export let data, helpers, settings;
-
-  // add permalinks to the hook list so we can link to the posts.
 </script>
 
 <style>
@@ -28,7 +26,6 @@
       margin-right: 1rem;
     }
   }
-
   :global(.entry) {
     padding: 1rem;
     border: 1px solid #ddd;
@@ -49,10 +46,11 @@
     color: #fff;
   }
 
-
-  .about {
-    margin-bottom: 2rem;
+  :global(div.entries>.entry>p.date) {
+    font-size: small;
+    color: lightslategrey;
   }
+
 
   @media (min-width: 768px) {
     .hydrate {
@@ -61,16 +59,6 @@
     }
   }
 
-  .hooks {
-    display: grid;
-    grid-template-columns: 100%;
-  }
-
-  @media (min-width: 768px) {
-    .hooks {
-      grid-template-columns: 50% 50%;
-    }
-  }
 </style>
 
 <svelte:head>
@@ -94,10 +82,22 @@
   </p>
 </div>
 
+<h2>My Posts</h2>
+<p>One-off articles</p>
 <div class="blog">
   <div class="entries">
     {#each data.markdown.blog as blog}
-      <BlogTeaser {blog} {helpers} />
+      <BlogTeaser blog={blog} helpers={helpers} />
+    {/each}
+  </div>
+</div>
+
+<h2>My Guides</h2>
+<p>These posts evolve over time</p>
+<div class="blog">
+  <div class="entries">
+    {#each data.markdown.guide as guide}
+      <BlogTeaser blog={guide} helpers={helpers} />
     {/each}
   </div>
 </div>

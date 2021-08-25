@@ -24,7 +24,7 @@ module.exports = {
   },
   plugins: {
     '@elderjs/plugin-markdown': {
-      routes: ['blog'],
+      routes: ['blog', 'guide'],
       useSyntaxHighlighting: {
       theme: 'nord' // available themes: https://github.com/shikijs/shiki/blob/main/docs/themes.md - try dark-plus or github-light
       // theme is the only option available - for now.
