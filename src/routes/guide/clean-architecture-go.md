@@ -3,6 +3,7 @@ title: 'Clean (maybe?) Architecture in Go'
 excerpt: "How I prefer to structure my web services"
 date: '2021-08-24T21:35:07.322Z'
 author: Ahmed Al-Hulaibi
+status: draft
 ---
 
 1. API Specification using Protobuf
@@ -85,9 +86,17 @@ Repository Adapter implements service defined repository interface
 
 # Event Layer
 
+- Emit facts from the application layer
+- Avoid hooking into database (Change Data Capture) as the Repository data model may not match the event data model 
+
 ## Event Publisher Adapters
 
 Event Publisher Adapters implements service defined event publisher interface
+
+> # Consider persisting events
+> Persist events through an event log or a time series database (with ACID guarantees)
+> 
+
 ## Workers (Subscribers) treated like a Transport Layer
 
 # Testing

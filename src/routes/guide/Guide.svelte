@@ -74,7 +74,9 @@
   {#if frontmatter.author}<small>By {frontmatter.author}</small>{/if}
 </div>
 
-{#if html}
+{#if frontmatter.status === 'draft'}
+  <h1>working on it...</h1>
+{:else if html}
   {@html html}
 {:else}
   <h1>Oops!! Markdown not found!</h1>

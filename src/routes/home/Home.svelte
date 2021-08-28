@@ -1,5 +1,6 @@
 <script>
   import BlogTeaser from '../../components/BlogTeaser.svelte';
+  import GuideTeaser from '../../components/GuideTeaser.svelte';
   export let data, helpers, settings;
 </script>
 
@@ -97,7 +98,7 @@
 <div class="blog">
   <div class="entries">
     {#each data.markdown.guide as guide}
-      <BlogTeaser blog={guide} helpers={helpers} />
+      <GuideTeaser guide={guide} helpers={helpers} />
     {/each}
   </div>
 </div>
