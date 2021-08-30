@@ -9,7 +9,7 @@ Generally, `context.Context` is used to propagate cancellation signals, deadline
 
 The definition of request-scoped is often stretched to **anything needed to process this request.** My personal pet peeve is seeing it used for dependency injection.
 
-I have learned the hard way (not by choice) to **avoid using `context.Context` for dependency injection and shared state that alters behaviour.** 
+I have learned the hard way to **avoid using `context.Context` for dependency injection and shared state that alters behaviour.** 
 
 Using `context.Context` as a dependency injection and/or shared state object is confusing for maintainers and consumers of a package. In my experience this results in the following side effects:
 
