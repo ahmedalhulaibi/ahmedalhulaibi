@@ -188,7 +188,7 @@ func extractLogger(ctx context.Context) log.Logger {
 
 What would be better is if the reference to `logger` and `sql.DB` was injected directly into the `service` through a factory function. `sql.DB` and `logger` are service dependencies. It is likely that they will be used across many or all methods of our service.
 
-In the example below, the `New` factory function signature clearly communicates the expected service dependencies. The factory function can validate the inputs explicitly. This also solves the issue around making our service method easier to use, since we no longer have to provide `logger` or `sql.dB` as an input to every method. It also better communicates temporal coupling as our factory explicitly states its inputs.
+In the example below, the `NewService` factory function signature clearly communicates the expected service dependencies. The factory function can validate the inputs explicitly. This also solves the issue around making our service method easier to use, since we no longer have to provide `logger` or `sql.dB` as an input to every method. It also better communicates temporal coupling as our factory explicitly states its inputs.
 
 ```go
 type Service struct {
@@ -217,7 +217,7 @@ func NewService(db *sql.DB, logger log.Logger, opts ...func(*service)) (*Service
     opt(service)
   }
 
-  return &service{
+  return &Service{
     logger: logger,
     db:     db,
   }, nil
