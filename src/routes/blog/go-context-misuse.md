@@ -32,11 +32,10 @@ func (s Service) GetUserByID(ctx context.Context, db *sql.DB, id int64) (*User, 
 
 func main() {
   db, err := sql.Open("driver-name", *dsn)
-	if err != nil {
+  if err != nil {
     // ...
-	}
-	defer db.Close()
-
+  }
+  defer db.Close()
 
   svc := user.NewService()
   u, err := svc.GetUserByID(context.Background(), db, 1)
