@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&family=Roboto+Mono:ital,wght@0,100;0,200;0,400;0,700;1,100;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?Merriweather:ital,wght@0,300;0,400;0,700;1,700&family=Roboto&family=Roboto+Mono:ital,wght@0,100;0,200;0,400;0,700;1,100;1,700&display=swap');
 
 .code,
 code:not(pre code) {
@@ -6,7 +6,7 @@ code:not(pre code) {
   background: #eee;
   border-radius: 3px;
   margin-right: 0.5rem;
-  font-family: monospace;
+  font-family: 'Roboto Mono', monospace;
   display: inline-block;
 }
 
@@ -14,9 +14,14 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: 'Roboto Mono', monospace;
-  font-weight: bold;
+  font-family: 'Merriweather', serif;
+  font-weight: 400;
   line-height: 2.35rem;
+}
+
+h3 {
+  font-style: italic;
+  font-size: 1.35em;
 }
 
 body {

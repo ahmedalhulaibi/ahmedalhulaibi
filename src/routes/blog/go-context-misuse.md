@@ -7,14 +7,14 @@ author: Ahmed Al-Hulaibi
 
 Generally, `context.Context` is used to propagate cancellation signals, deadlines, and request-scoped values.
 
-The definition of request-scoped is often stretched to **anything needed to process this request.** My personal pet peeve is seeing it used for dependency injection.
+The definition of request-scoped is often stretched to **anything needed to process this request.** My personal pet peeve is seeing it used for Dependency Injection.
 
-I have learned the hard way to **avoid using `context.Context` for dependency injection and shared state that alters behaviour.** 
+I have learned the hard way to **avoid using `context.Context` for Dependency Injection and shared state that alters behaviour.** 
 
-Using `context.Context` as a dependency injection and/or shared state object is confusing for maintainers and consumers of a package. In my experience this results in the following side effects:
+Using `context.Context` as a Dependency Injection and/or shared state object is confusing for maintainers and consumers of a package. In my experience this results in the following side effects:
 
 - **[Obfuscates inputs](#obfuscated-inputs)** when reading method and function signatures.
-- **[Creates implicit coupling](#implicit-and-unclear-temporal-coupling)** which slows down maintenance.
+- **[Creates implicit couplings](#implicit-and-unclear-temporal-coupling)** which slows down refactoring.
 - **[Leads to nil pointer exceptions](#nil-pointer-exceptions)** causing development delays and service disruptions.
 
 ## Example
@@ -43,9 +43,9 @@ func main() {
 }
 ```
 
-It seems somewhat tedious to have to pass in `sql.DB` every time we want to fetch a user.
+It is repetitive to have to pass in `sql.DB` every time we want to fetch a user.
 
-Below is an example of how I have seen `context.Context` used to solve this problem. The intent is to design `service.GetUserByID` so that it is easier to consume. By propagating a frequently used object `sql.DB` through shared state `context.Context` we don't have to force all of our method signatures to define `sql.DB` as a parameter. This is a form of Dependency Injection.
+Below is an example of how I have seen `context.Context` used to solve this problem. The intent is to design `service.GetUserByID` so that it is easier to consume and reduce repitition. By propagating a frequently used object, `sql.DB`, through shared state, `context.Context`, we don't have to force all of our method signatures to define `sql.DB` as a parameter. This is a form of Dependency Injection.
 
 ```go
 // package user
@@ -72,21 +72,21 @@ func main() {
 }
 ```
 
-Looks great! Now I don't have to pass in the `sql.DB` as a separate input. It is less complicated, right? Not really.
+Looks great! Now callers don't have to pass in the `sql.DB` as a separate input. What's the catch?
 
 ## Obfuscated inputs
 
-We have shifted the complexity from the method signature and hidden it behind an obscure object `context.Context`. Let's look at the method signature.
+The complexity has shifted from the method signature. It is now hidden it behind an obscure object `context.Context`. 
 
 ```go
 func (s Service) GetUserByID(ctx context.Context, id int64) (*User, error)
 ```
 
-The complier and GoDoc will tell us this method only requires 2 input parameters. This is not true. It only _appears_ as though it requires 2 inputs. This method clearly requires 3 inputs, or it will not run as expected. One of the inputs is obfuscated behind `context.Context` but it is not communicated in the method signature. This will have more consequences. 
+The compiler will tell us this method only requires 2 input parameters. We know this is not true. It only _appears_ as though it requires 2 inputs. This method clearly requires 3 inputs, or it will not run as expected. One of the inputs is obfuscated behind `context.Context` but it is not communicated in the method signature. This will have more consequences. 
 
 ## Implicit and unclear temporal coupling
 
-Using our example, there is nothing to communicate to the compiler or through GoDoc that the method expects `sql.DB` to be passed in through `context.Context`.
+Using our example, there is nothing to communicate to the compiler that the method expects `sql.DB` to be passed in through `context.Context`.
 
 ```go
 func (s Service) GetUserByID(ctx context.Context, id int64) (*User, error)
@@ -94,11 +94,15 @@ func (s Service) GetUserByID(ctx context.Context, id int64) (*User, error)
 
 In reality, first we have to run some logic to instantiate `sql.DB`, then more logic to inject the `sql.DB` into `context.Context`. Only then can we safely invoke the service method. This is a coupling in the temporal dimension. `A` must invoke `B` before invoking `C`.
 
-This can become a hurdle when refactoring. Typically `context.Context` is propagated through the entire stack, but not all methods/functions use all the values in `context.Context`. This can lead to implicit couplings deep in a stack where say function `A` injects `sql.DB` into context, then calls `B` which calls `C` and so on until `Z` extracts the value. Functions `B` all the way to `Y` don't depend on `sql.DB`, but `A` and `Z` are temporally coupled. Remove `A` and now any caller to `Z` breaks with a nil pointer exception.
+The coupling itself is not the issue. The problem is it is not communicated clearly in the method signature.
+
+This can become a hurdle when refactoring. Typically `context.Context` is propagated through the entire stack, but not all methods/functions use all the values in `context.Context`. This method of Dependency Injection leads to more implicit couplings deep in a stack.
+
+Function `A` injects `sql.DB` into context, then calls `B` which calls `C` and so on until `Z` extracts the dependency it needs from `context.Context`. Functions `B` all the way to `Y` don't depend on `sql.DB` directly. Remove `A` and now any caller to `Z` breaks with a nil pointer exception.
 
 ## Nil pointer exceptions
 
-Looking at our original example with obfuscated inputs (listed again below), it has been established that this implementation has **obfuscated the inputs to the method**.
+Looking at our original example with obfuscated inputs (listed again below), it has been established that this implementation has **obfuscated the inputs to the method** and **fails to communicate a temporal coupling**. As mentioned the consequences of this are a nil pointer exception.
 
 ```go
 // package user
@@ -117,21 +121,23 @@ func main() {
 }
 ```
 
-The above implementation will compile even though we failed to set our `sql.DB` in `context.Context`. How is a reader supposed to know that there was a specific value, `sql.DB` expected in `context.Context`? The only way to know would be to read the implementation or wait to run into an nil pointer exception to uncover the truth.
-
-In a small codebase, it may be easy to read the implementation you're invoking. But if you have a very large codebase or framework that relies on this pattern it is likely doing more harm than good.
+The above implementation will compile even though we failed to set our `sql.DB` in `context.Context`. How is a reader supposed to know that there was a specific value, `sql.DB`, expected in `context.Context`? The only way to know would be to read the implementation or wait to run into an nil pointer exception to uncover the truth.
 
 On top of the issues around readability and maintainability, if a nil pointer exception like this slips into a live environment it will cause disruptions for you, your colleagues and worst of all your customers.
 
+In a small codebase, it may be easy to read the implementation. When you have a very large codebase or a deep call stack it is not as productive to ask that every developer read through all implementations to make sure they didn't miss a hidden input.
+
 ## How can we fix this?
 
-The best 2 solutions I use are:
+The solution I prefer is explicit Dependency Injection for service-wide dependencies like `logger` and `sql.DB` using factory functions.
 
-1. Dependency Injection for service-wide dependencies like `logger` and `sql.DB`
-2. Explicitly define input parameters
+Let's walk through options
 
-Let's walk through all the options though. 
-
+1. Code Review
+2. Tests
+3. Defensive Programming
+4. Fallback
+5. Explicit Dependency Injection
 
 ### Code Review won't always work
 
@@ -184,11 +190,13 @@ func extractLogger(ctx context.Context) log.Logger {
   }
 }
 ```
-### Dependency injection is best
+### Explicit Dependency injection is best
 
-What would be better is if the reference to `logger` and `sql.DB` was injected directly into the `service` through a factory function. `sql.DB` and `logger` are service dependencies. It is likely that they will be used across many or all methods of our service.
+What would be better is if the references (to `logger` and `sql.DB`) were injected directly into the `Service` through a factory function. `sql.DB` and `logger` are service dependencies. It is likely that they will be used across many or all methods of our service.
 
-In the example below, the `NewService` factory function signature clearly communicates the expected service dependencies. The factory function can validate the inputs explicitly. This also solves the issue around making our service method easier to use, since we no longer have to provide `logger` or `sql.dB` as an input to every method. It also better communicates temporal coupling as our factory explicitly states its inputs.
+In the example below, the `NewService` factory function signature clearly communicates the expected service dependencies. The factory function should validate the inputs explicitly on initialization as opposed to at run-time. This way we can rollback a deployment before serving requests, reducing impact to users.
+
+This also solves the issue around making our service method easier to use, since we no longer have to provide `logger` or `sql.dB` as an input to every method. It also better communicates temporal coupling as our factory explicitly states its inputs.
 
 ```go
 type Service struct {
@@ -255,7 +263,7 @@ My preference is to leverage the compiler as much as possible and be explicit ab
 
 Any values required as inputs to functions and methods should be defined explicitly as input parameters. When methods have many required inputs, lean on composing related inputs with the factory and builder pattern.
 
-For service-wide dependencies like `sql.DB` or loggers, use dependency injection. Avoid hiding dependencies in `context.Context` to minimize run-time exceptions and make your code easier to read.
+For service-wide dependencies like `sql.DB` or loggers, use factory functions. Avoid hiding dependencies in `context.Context` to minimize run-time exceptions and make your code easier to read.
 
 
 > ### Hold on, isn't a logger request-scoped?
