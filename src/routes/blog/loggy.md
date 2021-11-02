@@ -1,6 +1,6 @@
 ---
 title: 'Stop using context for loggers by using context for loggers'
-excerpt: "How we can inject a logger as a (decoupled) service dependency __and__ write log messages with request-scoped values **without** passing a logger around or repeating arguments"
+excerpt: "A better way to consume contextual loggers"
 date: '2021-11-01T23:52:07.322Z'
 author: Ahmed Al-Hulaibi
 ---
