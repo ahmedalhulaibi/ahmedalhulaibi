@@ -1,5 +1,5 @@
 ---
-title: 'Stop using context for loggers by using context for loggers'
+title: 'Contextual Logging Pattern'
 excerpt: "A better way to consume contextual loggers"
 date: '2021-11-01T23:52:07.322Z'
 author: Ahmed Al-Hulaibi
